@@ -1,5 +1,7 @@
 package vss.domain;
 
+import java.io.Serializable;
+
 public class GarageResponse {
     private String maintenanceFrequency;
 
@@ -8,5 +10,9 @@ public class GarageResponse {
     }
     public String getMaintenanceFrequency() {
         return maintenanceFrequency;
+    }
+
+    public void setMaintenanceFrequency(String maintenanceFrequency) {
+        this.maintenanceFrequency = maintenanceFrequency;
     }
 }

@@ -28,6 +28,8 @@ public class VehicleStatusController {
     public Mono<VehicleResponse> vehicleStatus(@Valid VehicleRequest vehicleRequest) {
         String requestId = UUID.randomUUID().toString();
         logger.info("Request ID: {} received", requestId);
-        return vehicleStatusService.vehicleStatus(vehicleRequest, requestId);
+        Mono<VehicleResponse> vehicleStatus = vehicleStatusService.vehicleStatus(vehicleRequest, requestId);
+        logger.info("Request ID: {} processed", requestId);
+        return vehicleStatus;
     }
 }

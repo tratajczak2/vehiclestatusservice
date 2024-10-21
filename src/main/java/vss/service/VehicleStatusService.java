@@ -40,48 +40,43 @@ public class VehicleStatusService {
             if (vehicleRequest.isMaintenanceCheck()) {
                 garageResponse = garageClient.getReport(vehicleRequest.getVin());
             }
+            logger.info("Request ID: {} processed 3rd party services", requestId);
         } catch(Exception e) {
             /* Log the error and rethrow the exception */
             logger.info("Request ID: {} failed with 3rd party services: {}", requestId, e.getMessage());
             throw e;
-        } finally {
-            logger.info("Request ID: {} processed 3rd party services", requestId);
         }
 
-        try {
-            if (vehicleRequest.isAccidentFreeCheck() && vehicleRequest.isMaintenanceCheck())
-                /* Combine the responses */
-                return Mono.zip(insuranceResponse, garageResponse, (i, g) ->
-                        new VehicleResponse(requestId,
-                                vehicleRequest.getVin(),
-                                InsuranceToVehicleRequest.fromInsurance(i.getReport().getClaims()),
-                                GarageToVehicleRequest.fromGarage(g.getMaintenanceFrequency())
-                        )
-                );
-            else if (vehicleRequest.isAccidentFreeCheck())
-                /* Map the insurance response */
-                return insuranceResponse.map(i ->
-                        new VehicleResponse(requestId,
-                                vehicleRequest.getVin(),
-                                InsuranceToVehicleRequest.fromInsurance(i.getReport().getClaims()),
-                                null
-                        )
-                );
-            else
-                /* Map the garage response */
-                return garageResponse.map(g ->
-                        new VehicleResponse(requestId,
-                                vehicleRequest.getVin(),
-                                null,
-                                GarageToVehicleRequest.fromGarage(g.getMaintenanceFrequency())
-                        )
-                );
-        } catch(Exception e) {
-            /* Log the error and rethrow the exception */
-            logger.info("Request ID: {} failed to complete: {}", requestId, e.getMessage());
-            throw e;
-        } finally {
-            logger.info("Request ID: {} completed", requestId);
-        }
+        if (vehicleRequest.isAccidentFreeCheck() && vehicleRequest.isMaintenanceCheck())
+            /* Combine the responses */
+            return Mono.zip(insuranceResponse, garageResponse, (i, g) ->
+                    new VehicleResponse(requestId,
+                            vehicleRequest.getVin(),
+                            InsuranceToVehicleRequest.fromInsurance(i.getReport().getClaims()),
+                            GarageToVehicleRequest.fromGarage(g.getMaintenanceFrequency()))
+            ).doOnError(e -> {
+                logger.info("Request ID: {} failed to combine responses: {}", requestId, e.getMessage());
+            });
+        else if (vehicleRequest.isAccidentFreeCheck())
+            /* Map the insurance response */
+            return insuranceResponse.map(i ->
+                    new VehicleResponse(requestId,
+                            vehicleRequest.getVin(),
+                            InsuranceToVehicleRequest.fromInsurance(i.getReport().getClaims()),
+                            null
+                    )
+            ).doOnError(e -> {
+                logger.info("Request ID: {} failed to map insurance response: {}", requestId, e.getMessage());
+            });
+        else
+            /* Map the garage response */
+            return garageResponse.map(g ->
+                    new VehicleResponse(requestId,
+                            vehicleRequest.getVin(),
+                            null,
+                            GarageToVehicleRequest.fromGarage(g.getMaintenanceFrequency()))
+            ).doOnError(e -> {
+                logger.info("Request ID: {} failed to map garage response: {}", requestId, e.getMessage());
+            });
     }
 }

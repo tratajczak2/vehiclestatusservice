@@ -9,8 +9,8 @@ import vss.domain.InsuranceResponse;
 /**
  * Abstraction of insurance interaction.
  */
-@Client("https://insurance.com/accidents")
+@Client(id = "insurance-client")
 public interface InsuranceClient {
-    @Get("/report")
+    @Get("/accidents/report")
     Mono<InsuranceResponse> getReport(@QueryValue String vin);
 }

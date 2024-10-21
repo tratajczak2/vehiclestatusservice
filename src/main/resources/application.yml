@@ -1,0 +1,26 @@
+#Tue Oct 15 07:03:22 UTC 2024
+micronaut:
+  application:
+    name: vehiclestatusservice
+
+  http:
+    client:
+      retry:
+        enabled: true
+        attempts: 3          # Number of retry attempts
+        delay: 1s            # Delay between retries
+        multiplier: 2        # Delay multiplier (exponential backoff)
+        max-delay: 10s       # Maximum delay between retries
+
+    services:
+      garage-client:
+        url: "https://topgarage.com"
+        read-timeout: 5s  # Set the read timeout to 5 seconds
+        connect-timeout: 3s  # Set the connect timeout to 3 seconds
+
+      insurance-client:
+        url: "https://insurance.com"
+        read-timeout: 5s  # Set the read timeout to 5 seconds
+        connect-timeout: 3s  # Set the connect timeout to 3 seconds
+
+

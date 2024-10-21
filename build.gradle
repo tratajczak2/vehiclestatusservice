@@ -25,10 +25,12 @@ dependencies {
     implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.0'
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testImplementation "org.mockito:mockito-core"
     testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation "org.wiremock:wiremock:3.9.1"
 }
 
 
