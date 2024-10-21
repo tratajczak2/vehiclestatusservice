@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @MicronautTest
-@WireMockTest(httpPort = 8888)
+@WireMockTest(httpsEnabled = true, httpPort = 8443)
 public class VehicleStatusControllerWireMockTest {
 
     @Inject
