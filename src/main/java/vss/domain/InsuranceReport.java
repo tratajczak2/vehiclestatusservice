@@ -1,5 +1,8 @@
 package vss.domain;
 
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
 public class InsuranceReport {
     private Integer claims;
 

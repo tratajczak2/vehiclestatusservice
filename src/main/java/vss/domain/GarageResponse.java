@@ -1,7 +1,8 @@
 package vss.domain;
 
-import java.io.Serializable;
+import io.micronaut.serde.annotation.Serdeable;
 
+@Serdeable
 public class GarageResponse {
     private String maintenanceFrequency;
 

@@ -1,5 +1,9 @@
 package vss.domain;
 
+import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
 public class VehicleResponse {
     private String requestId;
     private String vin;
